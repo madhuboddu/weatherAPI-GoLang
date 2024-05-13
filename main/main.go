@@ -3,34 +3,34 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"io"
 	"log"
-
-	"net/http"
-	"net/url"
-	"time"
 )
 
-type current struct {
-	Temperature float64 `json:"temperature"`
-	FeelsLike   float64 `json:"feelsLike"`
-	UVIndex     int32   `json:"uv"`
+type Current struct {
+	Temperature float64 `json:"temp_c"`
+	FeelsLike   float64 `json:"feelslike_c"`
+	UVIndex     float64 `json:"uv"`
 }
 
-type location struct {
+type Location struct {
 	Name    string `json:"name"`
 	Country string `json:"country"`
 }
 
 type Fields struct {
-	current  current
-	location location
+	Current  Current  `json:"current"`
+	Location Location `json:"location"`
 }
 
 func main() {
 
 	fmt.Print("################ ! Welcome to Advanced weather application ! ################### \n")
-	responseBody := GetWeatherInfo()
+
+	var zipcode string
+	fmt.Print("Please enter zip code to view the Report\n")
+	fmt.Scan(&zipcode)
+
+	responseBody := GetWeatherInfo(zipcode)
 
 	fmt.Println(string(responseBody))
 	var fields = JsonMarshal(responseBody)
@@ -38,13 +38,12 @@ func main() {
 }
 
 func DisplayMessage(fields Fields) {
-	var country = fields.location.Country
-	var location = fields.location.Name
-	var temperature = fields.current.Temperature
-	var feelsLike = fields.current.FeelsLike
+	var country = fields.Location.Country
+	var location = fields.Location.Name
+	var temperature = fields.Current.Temperature
+	var feelsLike = fields.Current.FeelsLike
 
 	fmt.Printf("The temperature at %s - %s is %f but feels like %f\n", location, country, temperature, feelsLike)
-
 }
 
 func JsonMarshal(res []byte) Fields {
@@ -57,28 +56,4 @@ func JsonMarshal(res []byte) Fields {
 	}
 
 	return fields
-}
-
-func GetWeatherInfo() []byte {
-
-	baseURL := "http://api.weatherapi.com/v1/current.json"
-	apiKey := "a489e9b203534843ba000645242604"
-	location := "N2J 2C1"
-	aqi := "yes"
-
-	encodedLocation := url.QueryEscape(location)
-
-	url := fmt.Sprintf("%s?key=%s&q=%s&aqi=%s", baseURL, apiKey, encodedLocation, aqi)
-
-	println(url)
-	client := &http.Client{
-		Timeout: 10 * time.Second,
-	}
-
-	request, _ := http.NewRequest(http.MethodGet, url, nil)
-	response, _ := client.Do(request)
-	defer response.Body.Close()
-	responseBody, _ := io.ReadAll(response.Body)
-
-	return responseBody
 }
