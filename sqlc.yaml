@@ -9,14 +9,3 @@ packages:
     emit_prepared_queries: false
     emit_interface: false
     emit_exact_table_names: false
-
-
-# version: '2'
-# sql:
-# - schema: "./db/migration"
-#   queries: "./db/query"
-#   engine: postgresql
-#   gen:
-#     go:
-#       package: weather
-#       out: postgresql

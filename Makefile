@@ -1,17 +1,17 @@
 postgres:
-	docker run --name postgrescontainer -p 5431:5432 -e POSTGRES_USER=admin -e POSTGRES_PASSWORD=secret -d postgres
+	docker run --name weatherdb -p 5431:5432 -e POSTGRES_USER=admin -e POSTGRES_PASSWORD=secret -d postgres
 
 createdb:
-	docker exec -it postgrescontainer createdb -U admin weather
+	docker exec -it weatherdb createdb -U admin weatherdb
 
 dropdb:
-	docker exec -it postgrescontainer dropdb -U admin weather
+	docker exec -it weatherdb dropdb -U admin weatherdb
 
 migrateup:
-	migrate -path db/migration -database "postgresql://admin:secret@localhost:5431/weather?sslmode=disable" -verbose up
+	migrate -path db/migration -database "postgresql://admin:secret@localhost:5431/weatherdb?sslmode=disable" -verbose up
 
 migratedown:
-	migrate -path db/migration -database "postgresql://admin:secret@localhost:5431/weather?sslmode=disable" -verbose down
+	migrate -path db/migration -database "postgresql://admin:secret@localhost:5431/weatherdb?sslmode=disable" -verbose down
 
 sqlc:
 	sqlc generate

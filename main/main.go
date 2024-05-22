@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
+
+	"github.com/gin-gonic/gin"
 )
 
 type Current struct {
@@ -24,26 +26,32 @@ type Fields struct {
 
 func main() {
 
-	fmt.Print("################ ! Welcome to Advanced weather application ! ################### \n")
+	router := gin.Default()
+	router.GET("/weather/:zipcode", getWeatherByCode)
+	router.Run("localhost:8080")
 
-	var zipcode string
-	fmt.Print("Please enter zip code to view the Report\n")
-	fmt.Scan(&zipcode)
+	// fmt.Print("################ ! Welcome to Advanced weather application ! ################### \n")
 
-	responseBody := GetWeatherInfo(zipcode)
+	// var zipcode string
+	// fmt.Print("Please enter zip code to view the Report\n")
+	// fmt.Scan(&zipcode)
 
-	fmt.Println(string(responseBody))
-	var fields = JsonMarshal(responseBody)
-	DisplayMessage(fields)
+	// responseBody := GetWeatherInfo(zipcode)
+
+	// fmt.Println(string(responseBody))
+	// var fields = JsonMarshal(responseBody)
+	// DisplayMessage(fields)
 }
 
-func DisplayMessage(fields Fields) {
+func DisplayMessage(fields Fields) string {
 	var country = fields.Location.Country
 	var location = fields.Location.Name
 	var temperature = fields.Current.Temperature
 	var feelsLike = fields.Current.FeelsLike
 
-	fmt.Printf("The temperature at %s - %s is %f but feels like %f\n", location, country, temperature, feelsLike)
+	// fmt.Printf("The temperature at %s - %s is %f but feels like %f\n", location, country, temperature, feelsLike)
+	formatted := fmt.Sprintf("The temperature at %s - %s is %f but feels like %f\n", location, country, temperature, feelsLike)
+	return formatted
 }
 
 func JsonMarshal(res []byte) Fields {
