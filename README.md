@@ -1,19 +1,12 @@
 ### introduction
 
-```
-brew install sqlc
-```
+This is a simple weather app. The app gives you the temperature in Celcius at the give Canadian Postal code. Try it your self. ex : N2J , M1R
 
-make sure that the sqlc version is `v1.26.0`
+## Requisites
+Please ensure you have github.com/spf13/viper installed. 
+If not, run:  go get github.com/spf13/viper
 
 
-install [go-migrate](https://github.com/golang-migrate/migrate/releases)
 
-```
-wget https://github.com/golang-migrate/migrate/releases/download/v4.17.1/migrate.darwin-arm64.tar.gz
-tar -xvf migrate.darwin-arm64.tar.gz
-sudo mv ./migrate /usr/local/bin/migrate
-```
 
-after installation make sure that the version is `4.17.1`
 

@@ -6,33 +6,20 @@ import (
 	"net/http"
 	"net/url"
 	"time"
+
+	"github.com/gin-gonic/gin"
 )
-
-func GetWeatherInfos() string {
-
-	url := "http://api.weatherapi.com/v1/current.json?key=a489e9b203534843ba000645242604&q=N2J 2C1&aqi=yes"
-
-	client := &http.Client{
-		Timeout: 10 * time.Second,
-	}
-
-	request, _ := http.NewRequest(http.MethodGet, url, nil)
-
-	response, _ := client.Do(request)
-
-	defer response.Body.Close()
-
-	body, _ := io.ReadAll(response.Body)
-
-	fmt.Printf(string(body))
-
-	return string(body)
-}
 
 func GetWeatherInfo(zipcode string) []byte {
 
-	baseURL := "http://api.weatherapi.com/v1/current.json"
-	apiKey := "a489e9b203534843ba000645242604"
+	config, err := LoadConfig(".")
+
+	if err != nil {
+		return nil
+	}
+
+	baseURL := config.BaseURL
+	apiKey := config.APIKey
 	location := zipcode
 	aqi := "yes"
 
@@ -40,7 +27,6 @@ func GetWeatherInfo(zipcode string) []byte {
 
 	url := fmt.Sprintf("%s?key=%s&q=%s&aqi=%s", baseURL, apiKey, encodedLocation, aqi)
 
-	println(url)
 	client := &http.Client{
 		Timeout: 10 * time.Second,
 	}
@@ -49,6 +35,24 @@ func GetWeatherInfo(zipcode string) []byte {
 	response, _ := client.Do(request)
 	defer response.Body.Close()
 	responseBody, _ := io.ReadAll(response.Body)
-
 	return responseBody
+}
+
+func home(c *gin.Context) {
+	fmt.Print("This is a simple weather app. The app gives you the temperature in Celcius at the give Canadian Postal code. Try it your self. ex : N2J")
+}
+
+func getWeatherByCode(c *gin.Context) {
+	zipcode := c.Param("zipcode")
+
+	responseBody := GetWeatherInfo(zipcode)
+	var fields = JsonMarshal(responseBody)
+	formatMessgae := DisplayMessage(fields)
+	c.IndentedJSON(http.StatusOK, formatMessgae)
+
+	if formatMessgae != "" {
+		c.IndentedJSON(http.StatusOK, formatMessgae)
+		return
+	}
+	c.IndentedJSON(http.StatusNotFound, gin.H{"message": "ZIPCODE not found"})
 }
