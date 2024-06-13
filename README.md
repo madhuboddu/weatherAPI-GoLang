@@ -2,6 +2,8 @@
 
 This project is a GoLang application that fetches weather data for a given Canadian location using a weather API.
 
+![weather](https://github.com/madhuboddu/weatherAPI-GoLang/assets/13140049/667a3c5a-7e59-4e14-946a-ec5910a0e8e5)
+
 ## Project Structure
 
 - `main/`: Contains the main Go source code files.
