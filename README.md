@@ -37,7 +37,7 @@ This project is a GoLang application that fetches weather data for a given Canad
     Edit the app.env file to set your configuration variables:
     
     BaseURL=http://api.weatherapi.com/v1/current.json
-    APIKey=a489e9b203534843ba000645242604
+    APIKey=a489e9b203534843ba000645242604 (DEMO)
 
 ## Building and Running
 
