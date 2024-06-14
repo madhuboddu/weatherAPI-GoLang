@@ -25,5 +25,6 @@ func DisplayMessage(fields Fields) string {
 	var feelsLike = fields.Current.FeelsLike
 
 	formatted := fmt.Sprintf("The temperature at %s - %s is %f but feels like %f\n", location, country, temperature, feelsLike)
+
 	return formatted
 }

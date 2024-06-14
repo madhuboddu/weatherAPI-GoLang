@@ -10,6 +10,15 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+func getWeather(zipcode string) string {
+
+	responseBody := GetWeatherInfo(zipcode)
+	var fields = JsonMarshal(responseBody)
+	formatMessgae := DisplayMessage(fields)
+
+	return formatMessgae
+}
+
 func GetWeatherInfo(zipcode string) []byte {
 
 	config, err := LoadConfig(".")
@@ -26,7 +35,7 @@ func GetWeatherInfo(zipcode string) []byte {
 	encodedLocation := url.QueryEscape(location)
 
 	url := fmt.Sprintf("%s?key=%s&q=%s&aqi=%s", baseURL, apiKey, encodedLocation, aqi)
-
+	fmt.Print(url)
 	client := &http.Client{
 		Timeout: 10 * time.Second,
 	}
@@ -35,24 +44,29 @@ func GetWeatherInfo(zipcode string) []byte {
 	response, _ := client.Do(request)
 	defer response.Body.Close()
 	responseBody, _ := io.ReadAll(response.Body)
+
 	return responseBody
 }
 
 func home(c *gin.Context) {
+	// Popup.Alert("Weather App", "This is a simple weather app. The app gives you the temperature in Celcius at the give Canadian Postal code. Try it your self. ex : N2J")
 	fmt.Print("This is a simple weather app. The app gives you the temperature in Celcius at the give Canadian Postal code. Try it your self. ex : N2J")
 }
 
-func getWeatherByCode(c *gin.Context) {
+func getWeatherByCode(c *gin.Context) string {
 	zipcode := c.Param("zipcode")
 
 	responseBody := GetWeatherInfo(zipcode)
 	var fields = JsonMarshal(responseBody)
 	formatMessgae := DisplayMessage(fields)
+
 	c.IndentedJSON(http.StatusOK, formatMessgae)
 
 	if formatMessgae != "" {
 		c.IndentedJSON(http.StatusOK, formatMessgae)
-		return
+		return "Sucess : Request OK"
 	}
 	c.IndentedJSON(http.StatusNotFound, gin.H{"message": "ZIPCODE not found"})
+
+	return formatMessgae
 }
