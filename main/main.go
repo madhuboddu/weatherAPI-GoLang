@@ -3,6 +3,7 @@ package main
 import (
 	"fyne.io/fyne"
 	"fyne.io/fyne/app"
+	"fyne.io/fyne/canvas"
 	"fyne.io/fyne/container"
 	"fyne.io/fyne/widget"
 )
@@ -29,7 +30,11 @@ func main() {
 	w := myApp.NewWindow("Weather Application")
 	w.Resize(fyne.NewSize(300, 400))
 
+	background := canvas.NewImageFromFile("image.png")
+	background.FillMode = canvas.ImageFillStretch
+
 	hello := widget.NewLabel("You are in the most advanced weather report application")
+	hello.Resize(fyne.NewSize(50, 100))
 	zipcodeEntry := widget.NewEntry()
 	zipcodeEntry.SetPlaceHolder("Enter a Canadian Zip Code")
 
@@ -39,10 +44,12 @@ func main() {
 		hello.SetText(weatherData)
 	})
 
-	content := container.NewVBox(
-		hello,
-		zipcodeEntry,
-		getWeatherButton,
+	content := container.NewMax(
+		background, container.NewVBox(
+			hello,
+			zipcodeEntry,
+			getWeatherButton,
+		),
 	)
 
 	w.SetContent(content)
