@@ -10,7 +10,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func getWeather(zipcode string) string {
+func GetWeather(zipcode string) string {
 
 	responseBody := GetWeatherInfo(zipcode)
 	var fields = JsonMarshal(responseBody)
@@ -53,7 +53,7 @@ func home(c *gin.Context) {
 	fmt.Print("This is a simple weather app. The app gives you the temperature in Celcius at the give Canadian Postal code. Try it your self. ex : N2J")
 }
 
-func getWeatherByCode(c *gin.Context) string {
+func GetWeatherByCode(c *gin.Context) string {
 	zipcode := c.Param("zipcode")
 
 	responseBody := GetWeatherInfo(zipcode)

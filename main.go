@@ -40,7 +40,7 @@ func main() {
 
 	getWeatherButton := widget.NewButton("Get Weather", func() {
 		zipcode := zipcodeEntry.Text
-		weatherData := getWeather(zipcode)
+		weatherData := GetWeather(zipcode)
 		hello.SetText(weatherData)
 	})
 

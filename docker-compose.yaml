@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  weather-app:
+    image: weather-app:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8081"
+    environment:
+      - APIKey=74c0eea9fbf042298f5140110241406
+      - BaseURL=http://api.weatherapi.com/v1/current.json
+    volumes:
+      - .:/app
